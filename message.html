@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="Chat" content="Message, Chat, Contact">
+    <link rel="icon" type="image/png" href="icon.png">
+    <title>Welcome To ChatBox🌷</title>
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+            overflow-x: hidden;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 760px;
+            border: 1px solid #cce0ff;
+            border-radius: 12px;
+            background-color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: #1e90ff;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .header button {
+            background-color: #4682b4;
+            border: none;
+            padding: 9px 18px;
+            color: white;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.95em;
+            font-weight: bold;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .header button:hover {
+            background-color: #5a9bd4;
+            transform: translateY(-1px);
+        }
+
+        .header button:active {
+            transform: translateY(0);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 26px;
+            text-align: center;
+            flex-grow: 1;
+            letter-spacing: 0.5px;
+        }
+
+        #chat-section {
+            padding: 20px;
+            height: 350px;
+            overflow-y: auto;
+            border-bottom: 1px solid #e0e0e0;
+            flex-grow: 1;
+        }
+
+        .message {
+            margin-bottom: 12px;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.dara {
+            justify-content: flex-start;
+        }
+
+        .message.nary {
+            justify-content: flex-end;
+        }
+
+        .message span {
+            display: inline-block;
+            padding: 10px 15px;
+            border-radius: 20px;
+            max-width: 75%;
+            word-wrap: break-word;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.dara span {
+            background-color: #00bcd4;
+            color: white;
+        }
+
+        .message.nary span {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .chat-input {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-top: 1px solid #e0e0e0;
+            background-color: #f9f9f9;
+            gap: 10px;
+        }
+
+        .chat-input label {
+            font-weight: bold;
+            white-space: nowrap;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .chat-input input:focus {
+            border-color: #1e90ff;
+            box-shadow: 0 0 5px rgba(30, 144, 255, 0.3);
+        }
+
+        .chat-input button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 2.2em;
+            padding: 0 5px;
+            transition: transform 0.2s ease;
+            line-height: 1;
+        }
+
+        .chat-input button:hover {
+            transform: scale(1.15);
+        }
+
+        .chat-footer {
+            padding: 12px 20px;
+            text-align: left;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .chat-footer a, .clear-chat {
+            color: #ff4500;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: text-decoration 0.2s ease, color 0.2s ease;
+        }
+
+        .chat-footer a:hover, .clear-chat:hover {
+            text-decoration: underline;
+            color: #cc3700;
+        }
+
+        #profile-section {
+            padding: 25px 20px;
+            display: none;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .profile-image {
+            position: relative;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .profile-image img {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #1e90ff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transition: opacity 0.3s ease;
+        }
+
+        .profile-image .loading {
+            opacity: 0.5;
+        }
+
+        .profile-image input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .profile-image .remove-btn {
+            display: none;
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .profile-image .remove-btn:hover {
+            background-color: #cc0000;
+            transform: translateY(-1px);
+        }
+
+        .profile-details, .profile-form {
+            width: 100%;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+
+        .profile-details p, .profile-form label {
+            margin: 0.8rem 0;
+            font-size: 1.05rem;
+            color: #444;
+        }
+
+        .profile-form {
+            display: none;
+        }
+
+        .profile-form input[type="text"],
+        .profile-form input[type="password"],
+        .profile-form input[type="email"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .profile-form input[type="text"]:focus,
+        .profile-form input[type="password"]:focus,
+        .profile-form input[type="email"]:focus {
+            border-color: #1e90ff;
+            box-shadow: 0 0 5px rgba(30, 144, 255, 0.3);
+        }
+
+        .edit-btn, .save-btn {
+            background-color: #ffcc00;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-top: 2rem;
+            border-radius: 8px;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+        }
+
+        .edit-btn:hover, .save-btn:hover {
+            background-color: #ffd700;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .profile-footer {
+            padding: 20px 20px 15px 20px;
+            text-align: left;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 2rem;
+            width: 100%;
+            background-color: #f9f9f9;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .profile-footer a {
+            color: #ff4500;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: text-decoration 0.2s ease, color 0.2s ease;
+        }
+
+        .profile-footer a:hover {
+            text-decoration: underline;
+            color: #cc3700;
+        }
+
+        @media (max-width: 650px) {
+            .container {
+                width: 100%;
+                max-width: none;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .header {
+                border-radius: 0;
+            }
+            .chat-footer, .profile-footer {
+                border-radius: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            .header {
+                padding: 10px 15px;
+            }
+            .header h1 {
+                font-size: 22px;
+            }
+            .header button {
+                padding: 8px 14px;
+                font-size: 0.85em;
+            }
+
+            #chat-section {
+                height: 280px;
+                padding: 15px;
+            }
+            .message span {
+                max-width: 85%;
+                padding: 8px 12px;
+                font-size: 0.95em;
+            }
+            .chat-input {
+                flex-wrap: wrap;
+                padding: 10px 15px;
+                gap: 8px;
+            }
+            .chat-input label {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 0;
+                font-size: 0.9em;
+            }
+            .chat-input input {
+                width: calc(50% - 35px);
+                margin: 0 5px 5px 5px;
+                padding: 8px;
+                font-size: 0.95em;
+            }
+            .chat-input button {
+                font-size: 1.8em;
+                padding: 0 3px;
+            }
+            .chat-footer {
+                padding: 10px 15px;
+                font-size: 0.85em;
+            }
+
+            #profile-section {
+                padding: 20px 15px;
+            }
+            .profile-image img {
+                width: 100px;
+                height: 100px;
+                border-width: 3px;
+            }
+            .profile-image .remove-btn {
+                font-size: 0.8rem;
+                margin-left: 10px;
+                padding: 0.3rem 0.6rem;
+            }
+            .profile-details p, .profile-form label {
+                font-size: 1em;
+                margin: 0.6rem 0;
+            }
+            .profile-form input[type="text"],
+            .profile-form input[type="password"],
+            .profile-form input[type="email"] {
+                width: calc(100% - 16px);
+                padding: 8px;
+                margin-bottom: 10px;
+            }
+            .edit-btn, .save-btn {
+                font-size: 1em;
+                padding: 10px 15px;
+                margin-top: 1.5rem;
+            }
+            .profile-footer {
+                padding: 15px 15px 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button id="chat-tab">Chat</button>
+            <h1 class="header-title">Chat Box</h1>
+            <button id="profile-tab">Profile</button>
+        </div>
+
+        <div id="chat-view">
+            <div id="chat-section">
+                <div class="message dara"><strong>Dara said:</strong> <span>hello</span></div>
+            </div>
+            <div class="chat-input">
+                <label for="dara-input"><strong>Dara:</strong></label>
+                <input type="text" id="dara-input" placeholder="Type a message...">
+                <button id="dara-send" aria-label="Send message as Dara"><img src="icons.png" alt="icon" style="height: 32px; width: 30px;margin-top: 10px;margin-left: -10px;"></button>
+                <label for="nary-input"><strong>Nary:</strong></label>
+                <input type="text" id="nary-input" placeholder="Type a message...">
+                <button id="nary-send" aria-label="Send message as Nary"><img src="icons.png" alt="icon" style="height: 32px; width: 30px;margin-top: 10px;margin-left: -10px;"></button>
+            </div>
+            <div class="chat-footer">
+                <a href="#" id="logout-chat">LOGOUT</a>
+                <span class="clear-chat" id="clear-chat">Clear Chat</span>
+            </div>
+        </div>
+
+        <div id="profile-view" style="display: none;">
+            <div id="profile-section">
+                <div class="profile-body">
+                    <div class="profile-image">
+                        <img src="Bae Suzy.jpg" id="profile-pic" alt="Profile Picture">
+                        <input type="file" id="image-upload" accept="image/*">
+                        <button class="remove-btn" id="remove-pic" style="display: flex;justify-content: center;font-size: 14pt;">Remove</button>
+                    </div>
+                    <div class="profile-details">
+                        <p><strong>Name:</strong> Lee Doona</p>
+                        <p><strong>Password:</strong> abc@2022</p>
+                        <p><strong>Email:</strong> LeeDoona@gmail.com</p>
+                        <p><strong>Place of Birth:</strong> Siem Reap City</p>
+                        <p><strong>Current Address:</strong> Siem Reap City</p>
+                        <button class="edit-btn">Edit</button>
+                    </div>
+                    <form class="profile-form">
+                        <label for="profile-name"><strong>Name:</strong></label>
+                        <input type="text" id="profile-name" name="name" value="Keo Chanbormey">
+                        <label for="profile-password"><strong>Password:</strong></label>
+                        <input type="password" id="profile-password" name="password" value="abc@2022">
+                        <label for="profile-email"><strong>Email:</strong></label>
+                        <input type="email" id="profile-email" name="email" value="bormey@gmail.com">
+                        <label for="profile-birthplace"><strong>Place of Birth:</strong></label>
+                        <input type="text" id="profile-birthplace" name="placeOfBirth" value="Siem Reap City">
+                        <label for="profile-address"><strong>Current Address:</strong></label>
+                        <input type="text" id="profile-address" name="currentAddress" value="Siem Reap City">
+                        <button type="submit" class="save-btn">Save</button>
+                    </form>
+                </div>
+                <div class="profile-footer">
+                    <a href="#" id="logout-profile">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let currentImageSrc = $("#profile-pic").attr("src");
+            let hasCustomImage = false;
+
+            $("#chat-tab").click(function() {
+                $("#profile-view").hide();
+                $("#chat-view").show();
+                $(".header-title").text("Chat Box");
+                scrollToBottom();
+            });
+
+            $("#profile-tab").click(function() {
+                $("#chat-view").hide();
+                $("#profile-view").show();
+                $(".header-title").text("Profile");
+                $("#profile-pic").attr("src", currentImageSrc);
+                if (hasCustomImage) {
+                    $("#remove-pic").show();
+                } else {
+                    $("#remove-pic").hide();
+                }
+            });
+
+            $("#dara-send").click(function() {
+                let message = $("#dara-input").val().trim();
+                if (message) {
+                    $("#chat-section").append(`<div class="message dara"><strong>Dara said:</strong> <span>${message}</span></div>`);
+                    $("#dara-input").val("");
+                    scrollToBottom();
+                }
+            });
+
+            $("#nary-send").click(function() {
+                let message = $("#nary-input").val().trim();
+                if (message) {
+                    $("#chat-section").append(`<div class="message nary"><strong>Nary said:</strong> <span>${message}</span></div>`);
+                    $("#nary-input").val("");
+                    scrollToBottom();
+                }
+            });
+
+            $("#clear-chat").click(function() {
+                const confirmClear = confirm("Are you sure you want to clear the chat?");
+                if (confirmClear) {
+                    $("#chat-section").empty();
+                }
+            });
+
+            $("#dara-input").keypress(function(e) {
+                if (e.which === 13) {
+                    $("#dara-send").click();
+                }
+            });
+
+            $("#nary-input").keypress(function(e) {
+                if (e.which === 13) {
+                    $("#nary-send").click();
+                }
+            });
+
+            function scrollToBottom() {
+                $("#chat-section").scrollTop($("#chat-section")[0].scrollHeight);
+            }
+            scrollToBottom();
+
+            $("#image-upload").change(function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    if (!file.type.match('image.*')) {
+                        alert("Please upload a valid image file (e.g., PNG, JPG, GIF).");
+                        $(this).val('');
+                        return;
+                    }
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert("File size must be less than 2MB.");
+                        $(this).val('');
+                        return;
+                    }
+
+                    $("#profile-pic").addClass('loading');
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        $("#profile-pic").attr("src", event.target.result).removeClass('loading');
+                        currentImageSrc = event.target.result;
+                        hasCustomImage = true;
+                        $("#remove-pic").show();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            $("#remove-pic").click(function() {
+                $("#profile-pic").attr("src", "https://placehold.co/100x100/CCCCCC/333333?text=User");
+                $("#image-upload").val('');
+                currentImageSrc = $("#profile-pic").attr("src");
+                hasCustomImage = false;
+                $(this).hide();
+            });
+
+            $(".edit-btn").click(function() {
+                $(".profile-details").hide();
+                $(".profile-form").show();
+                $("#profile-pic").attr("src", currentImageSrc);
+                if (hasCustomImage) {
+                    $("#remove-pic").show();
+                } else {
+                    $("#remove-pic").hide();
+                }
+            });
+
+            $(".profile-form").submit(function(e) {
+                e.preventDefault();
+                let name = $("#profile-name").val();
+                let password = $("#profile-password").val();
+                let email = $("#profile-email").val();
+                let placeOfBirth = $("#profile-birthplace").val();
+                let currentAddress = $("#profile-address").val();
+                $(".profile-details").html(`
+                    <p><strong>Name:</strong> ${name}</p>
+                    <p><strong>Password:</strong> ${password}</p>
+                    <p><strong>Email:</strong> ${email}</p>
+                    <p><strong>Place of Birth:</strong> ${placeOfBirth}</p>
+                    <p><strong>Current Address:</strong> ${currentAddress}</p>
+                    <button class="edit-btn">Edit</button>
+                `);
+                $(".profile-form").hide();
+                $(".profile-details").show();
+                $(".edit-btn").click(function() {
+                    $(".profile-details").hide();
+                    $(".profile-form").show();
+                    $("#profile-pic").attr("src", currentImageSrc);
+                    if (hasCustomImage) {
+                        $("#remove-pic").show();
+                    } else {
+                        $("#remove-pic").hide();
+                    }
+                });
+                $("#profile-pic").attr("src", currentImageSrc);
+                if (hasCustomImage) {
+                    $("#remove-pic").show();
+                } else {
+                    $("#remove-pic").hide();
+                }
+            });
+
+            $("#logout-chat, #logout-profile").click(function(e) {
+                e.preventDefault();
+                const confirmLogout = confirm("Are you sure you want to log out?");
+                if (confirmLogout) {
+                    console.log("User logged out.");
+                    window.open("login.html");
+                }
+            });
+
+            if (!hasCustomImage) {
+                $("#remove-pic").hide();
+            }
+        });
+    </script>
+</body>
+</html>
